@@ -44,12 +44,6 @@
     margin: 0 0 16px;
   }
   .lede { color: var(--ink-soft); margin: 0 0 40px; max-width: 46ch; }
-  form {
-    background: var(--card);
-    border: 1px solid var(--line);
-    border-radius: 6px;
-    padding: clamp(24px, 5vw, 40px);
-  }
   .row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
   @media (max-width: 520px) { .row { grid-template-columns: 1fr; } }
   .field { margin-bottom: 24px; }
@@ -70,18 +64,6 @@
     outline: 2px solid var(--focus);
     outline-offset: 2px;
   }
-  fieldset { border: 0; padding: 0; margin: 8px 0 28px; }
-  legend { margin-bottom: 12px; }
-  .check {
-    display: grid;
-    grid-template-columns: 24px 1fr;
-    gap: 12px;
-    align-items: start;
-    font-weight: 400;
-    margin-bottom: 14px;
-    cursor: pointer;
-  }
-  .check input { width: 20px; height: 20px; margin: 3px 0 0; accent-color: var(--accent); }
   a { color: var(--accent); text-underline-offset: 2px; }
   [aria-invalid="true"] { border-color: var(--error) !important; }
   .error { color: var(--error); font-size: .875rem; margin-top: 6px; }
@@ -101,8 +83,24 @@
   .status:empty { display: none; }
   .status.err { color: var(--error); }
   .hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+  button { margin-top: 8px; }
+  form, .thanks {
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    padding: clamp(24px, 5vw, 40px);
+  }
   .thanks { display: none; }
-  .thanks h2 { font: 400 2rem/1.2 "DM Serif Display", Georgia, serif; margin: 0 0 12px; }
+  .thanks h2 { font: 400 clamp(1.75rem, 4vw, 2.25rem)/1.15 "DM Serif Display", Georgia, serif; margin: 0 0 12px; }
+  .thanks p { margin: 0 0 28px; color: var(--ink-soft); }
+  .button-link {
+    display: inline-flex; align-items: center;
+    font: 600 1rem/1 "DM Sans", sans-serif;
+    background: var(--accent); color: var(--accent-ink);
+    text-decoration: none; border-radius: 4px;
+    padding: 16px 28px; min-height: 48px;
+  }
+  .thanks:focus { outline: none; }
   .done form { display: none; }
   .done .thanks { display: block; }
 </style>
@@ -138,20 +136,6 @@
       <p class="error" id="reasons-err" aria-live="polite"></p>
     </div>
 
-    <fieldset aria-describedby="confirm-err">
-      <legend>Please confirm</legend>
-      <label class="check">
-        <input type="checkbox" name="noCopyright" value="Yes" required>
-        <span>The name above does not infringe copyright.</span>
-      </label>
-      <label class="check">
-        <input type="checkbox" name="notRegistered" value="Yes" required>
-        <span>The name above is not a registered entity.<br>Check the
-          <ahref="https://ised-isde.canada.ca/cbr-rec/" target="_blank" rel="noopener">Canada Business Registry<span class="hp"> (opens in a new tab)</span></a>.</span>
-      </label>
-      <p class="error" id="confirm-err" aria-live="polite"></p>
-    </fieldset>
-
     <!-- Spam trap: hidden from people, bots fill it in -->
     <div class="hp" aria-hidden="true">
       <label for="website">Website</label>
@@ -164,7 +148,8 @@
 
   <div class="thanks" tabindex="-1" id="thanks">
     <h2>Thank you.</h2>
-    <p>Your suggestion is in. <a href="" id="again">Submit another</a></p>
+    <p>Your suggestion is in.</p>
+    <a href="" id="again" class="button-link">Submit another</a>
   </div>
 </main>
 
@@ -196,10 +181,6 @@
       setError(id, ok ? "" : msg);
       if (!ok && !first) first = document.getElementById(id);
     }
-    const boxes = form.querySelectorAll('input[type="checkbox"]');
-    const allChecked = [...boxes].every(b => b.checked);
-    document.getElementById("confirm-err").textContent = allChecked ? "" : "Both confirmations are required.";
-    if (!allChecked && !first) first = [...boxes].find(b => !b.checked);
     if (first) first.focus();
     return !first;
   }

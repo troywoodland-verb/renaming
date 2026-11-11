@@ -4,10 +4,7 @@
  * The script runs as you and writes to your Sheet; submitters never get access to it.
  */
 const SHEET_NAME = 'Submissions';
-const HEADERS = [
-  'Submitted', 'First name', 'Last name', 'Suggested name', 'Reasons',
-  'Does not infringe copyright', 'Not a registered entity'
-];
+const HEADERS = ['Submitted', 'First name', 'Last name', 'Suggested name', 'Reasons'];
 
 function doPost(e) {
   const p = (e && e.parameter) || {};
@@ -29,9 +26,7 @@ function doPost(e) {
       clean_(p.firstName),
       clean_(p.lastName),
       clean_(p.suggestedName),
-      clean_(p.reasons, 5000),
-      p.noCopyright === 'Yes' ? 'Yes' : 'No',
-      p.notRegistered === 'Yes' ? 'Yes' : 'No'
+      clean_(p.reasons, 5000)
     ]);
   } finally {
     lock.releaseLock();

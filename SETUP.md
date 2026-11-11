@@ -30,5 +30,3 @@ your own site) or embed it. No server needed.
   CAPTCHA or move to Google Forms.
 - Values starting with `=`, `+`, `-` or `@` are prefixed with `'` so nothing submitted runs as a
   spreadsheet formula.
-- The checkboxes are self-declarations. They don't verify anything — you'll still want to check
-  the Canada Business Registry yourself before using a name.
