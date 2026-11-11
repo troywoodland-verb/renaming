@@ -1,0 +1,244 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Name Submission</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #1f2a24;
+    --ink-soft: #55625a;
+    --ground: #f6f3ec;
+    --card: #fffdf8;
+    --line: #d9d3c5;
+    --accent: #2f5d46;
+    --accent-ink: #ffffff;
+    --error: #a3341f;
+    --focus: #2f5d46;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--ground);
+    color: var(--ink);
+    font: 400 1rem/1.6 "DM Sans", system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  main {
+    max-width: 640px;
+    margin: 0 auto;
+    padding: clamp(40px, 8vw, 96px) 16px 64px;
+  }
+  .eyebrow {
+    font-size: .75rem;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    margin: 0 0 12px;
+  }
+  h1 {
+    font: 400 clamp(2.25rem, 6vw, 3.25rem)/1.1 "DM Serif Display", Georgia, serif;
+    margin: 0 0 16px;
+  }
+  .lede { color: var(--ink-soft); margin: 0 0 40px; max-width: 46ch; }
+  form {
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    padding: clamp(24px, 5vw, 40px);
+  }
+  .row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  @media (max-width: 520px) { .row { grid-template-columns: 1fr; } }
+  .field { margin-bottom: 24px; }
+  label, legend { display: block; font-weight: 600; font-size: .9375rem; margin-bottom: 6px; }
+  .hint { display: block; font-weight: 400; color: var(--ink-soft); font-size: .875rem; }
+  input[type="text"], textarea {
+    width: 100%;
+    font: inherit;
+    color: var(--ink);
+    background: #fff;
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    padding: 12px 14px;
+    min-height: 48px;
+  }
+  textarea { min-height: 140px; resize: vertical; }
+  input:focus-visible, textarea:focus-visible, button:focus-visible, a:focus-visible {
+    outline: 2px solid var(--focus);
+    outline-offset: 2px;
+  }
+  fieldset { border: 0; padding: 0; margin: 8px 0 28px; }
+  legend { margin-bottom: 12px; }
+  .check {
+    display: grid;
+    grid-template-columns: 24px 1fr;
+    gap: 12px;
+    align-items: start;
+    font-weight: 400;
+    margin-bottom: 14px;
+    cursor: pointer;
+  }
+  .check input { width: 20px; height: 20px; margin: 3px 0 0; accent-color: var(--accent); }
+  a { color: var(--accent); text-underline-offset: 2px; }
+  [aria-invalid="true"] { border-color: var(--error) !important; }
+  .error { color: var(--error); font-size: .875rem; margin-top: 6px; }
+  .error:empty { display: none; }
+  button {
+    font: 600 1rem/1 "DM Sans", sans-serif;
+    background: var(--accent);
+    color: var(--accent-ink);
+    border: 0;
+    border-radius: 4px;
+    padding: 16px 28px;
+    min-height: 48px;
+    cursor: pointer;
+  }
+  button[disabled] { opacity: .6; cursor: progress; }
+  .status { margin: 16px 0 0; }
+  .status:empty { display: none; }
+  .status.err { color: var(--error); }
+  .hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+  .thanks { display: none; }
+  .thanks h2 { font: 400 2rem/1.2 "DM Serif Display", Georgia, serif; margin: 0 0 12px; }
+  .done form { display: none; }
+  .done .thanks { display: block; }
+</style>
+</head>
+<body>
+<main id="main">
+  <h1>Suggest a name</h1>
+  <p class="lede">Put a name forward and tell us why it fits. Every field is required.</p>
+
+  <form id="form" novalidate>
+    <div class="row">
+      <div class="field">
+        <label for="firstName">First name</label>
+        <input type="text" id="firstName" name="firstName" autocomplete="given-name" required aria-describedby="firstName-err">
+        <p class="error" id="firstName-err" aria-live="polite"></p>
+      </div>
+      <div class="field">
+        <label for="lastName">Last name</label>
+        <input type="text" id="lastName" name="lastName" autocomplete="family-name" required aria-describedby="lastName-err">
+        <p class="error" id="lastName-err" aria-live="polite"></p>
+      </div>
+    </div>
+
+    <div class="field">
+      <label for="suggestedName">Suggested ‘Lorax’ name</label>
+      <input type="text" id="suggestedName" name="suggestedName" autocomplete="off" required aria-describedby="suggestedName-err">
+      <p class="error" id="suggestedName-err" aria-live="polite"></p>
+    </div>
+
+    <div class="field">
+      <label for="reasons">Reasons <span class="hint">Why this name? What does it say?</span></label>
+      <textarea id="reasons" name="reasons" required aria-describedby="reasons-err"></textarea>
+      <p class="error" id="reasons-err" aria-live="polite"></p>
+    </div>
+
+    <fieldset aria-describedby="confirm-err">
+      <legend>Please confirm</legend>
+      <label class="check">
+        <input type="checkbox" name="noCopyright" value="Yes" required>
+        <span>The name above does not infringe copyright.</span>
+      </label>
+      <label class="check">
+        <input type="checkbox" name="notRegistered" value="Yes" required>
+        <span>The name above is not a registered entity.<br>Check the
+          <ahref="https://ised-isde.canada.ca/cbr-rec/" target="_blank" rel="noopener">Canada Business Registry<span class="hp"> (opens in a new tab)</span></a>.</span>
+      </label>
+      <p class="error" id="confirm-err" aria-live="polite"></p>
+    </fieldset>
+
+    <!-- Spam trap: hidden from people, bots fill it in -->
+    <div class="hp" aria-hidden="true">
+      <label for="website">Website</label>
+      <input type="text" id="website" name="website" tabindex="-1" autocomplete="off">
+    </div>
+
+    <button type="submit" id="submit">Submit</button>
+    <p class="status" id="status" role="status" aria-live="polite"></p>
+  </form>
+
+  <div class="thanks" tabindex="-1" id="thanks">
+    <h2>Thank you.</h2>
+    <p>Your suggestion is in. <a href="" id="again">Submit another</a></p>
+  </div>
+</main>
+
+<script>
+  // Paste your Google Apps Script web-app URL between the quotes (see SETUP.md).
+  const ENDPOINT = "https://script.google.com/macros/s/AKfycbxhpS86OwZElvlGgGnZk-awsxIk0Jk96IP-jIRLIG8pSWBr1Bm_WGeKKgfWxgvPL8GM/exec";
+
+  const form = document.getElementById("form");
+  const statusEl = document.getElementById("status");
+  const btn = document.getElementById("submit");
+
+  function setError(id, msg) {
+    const el = document.getElementById(id);
+    const err = document.getElementById(id + "-err");
+    if (el) el.setAttribute("aria-invalid", msg ? "true" : "false");
+    if (err) err.textContent = msg || "";
+  }
+
+  function validate() {
+    let first = null;
+    const fields = {
+      firstName: "Enter your first name.",
+      lastName: "Enter your last name.",
+      suggestedName: "Enter the name you’re suggesting.",
+      reasons: "Tell us why you chose it."
+    };
+    for (const [id, msg] of Object.entries(fields)) {
+      const ok = document.getElementById(id).value.trim() !== "";
+      setError(id, ok ? "" : msg);
+      if (!ok && !first) first = document.getElementById(id);
+    }
+    const boxes = form.querySelectorAll('input[type="checkbox"]');
+    const allChecked = [...boxes].every(b => b.checked);
+    document.getElementById("confirm-err").textContent = allChecked ? "" : "Both confirmations are required.";
+    if (!allChecked && !first) first = [...boxes].find(b => !b.checked);
+    if (first) first.focus();
+    return !first;
+  }
+
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    statusEl.className = "status";
+    statusEl.textContent = "";
+    if (!validate()) return;
+
+    if (form.website.value) return; // bot
+    if (!ENDPOINT) {
+      statusEl.className = "status err";
+      statusEl.textContent = "This form isn’t connected to a spreadsheet yet.";
+      return;
+    }
+
+    btn.disabled = true;
+    btn.textContent = "Sending…";
+    try {
+      const data = new URLSearchParams(new FormData(form));
+      await fetch(ENDPOINT, { method: "POST", mode: "no-cors", body: data });
+      form.reset();
+      document.getElementById("main").classList.add("done");
+      document.getElementById("thanks").focus();
+    } catch (err) {
+      statusEl.className = "status err";
+      statusEl.textContent = "Something went wrong sending that. Please try again.";
+    } finally {
+      btn.disabled = false;
+      btn.textContent = "Submit";
+    }
+  });
+
+  document.getElementById("again").addEventListener("click", (e) => {
+    e.preventDefault();
+    document.getElementById("main").classList.remove("done");
+    document.getElementById("firstName").focus();
+  });
+</script>
+</body>
+</html>
